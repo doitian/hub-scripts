@@ -15,8 +15,10 @@ client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
 
 File.open(path, 'r') do |fd|
   JSON.parse(fd.read).each_pair do |(col_id, notes)|
-    notes.each do |note|
-      client.create_project_card(col_id.to_i, preview_header.merge(note: note))
+    if col_id.to_i.to_s == col_id
+      notes.each do |note|
+        client.create_project_card(col_id.to_i, preview_header.merge(note: note))
+      end
     end
   end
 end
