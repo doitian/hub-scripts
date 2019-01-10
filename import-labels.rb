@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 
+require_relative 'setup'
+
 require 'fileutils'
-require 'dotenv/load'
-require 'octokit'
 require 'json'
 
 if ARGV.size != 2 then

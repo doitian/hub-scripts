@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby
 
+require_relative 'setup'
+
 require 'date'
 require 'fileutils'
 require 'csv'
-require 'dotenv/load'
-require 'octokit'
 
 if ARGV.size == 0 then
   $stderr.puts 'export-issues.rb user/repo'
