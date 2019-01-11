@@ -1,0 +1,5 @@
+<% if item_type == 'Note' %>
+
+<%= item.note.gsub(/^/, '> ') %>
+
+<% else %>- [#<%= item.number %>](<%= item.html_url %>) <%= item.title %> <% item.assignees.each do |user| %> [@<%= user.login %>](@<%= user.html_url %>)<% end %><% end %>
