@@ -18,7 +18,7 @@ File.open(path, 'r') do |fd|
     if col_id.to_i.to_s == col_id
       notes.each do |note|
         puts "create: #{note.lines.first}"
-        if note.to_i.to_s == note then
+        if note.is_a?(Integer) then
           client.create_project_card(col_id.to_i, preview_header.merge(content_id: note.to_i, content_type: 'Issue'))
         else
           client.create_project_card(col_id.to_i, preview_header.merge(note: note))
