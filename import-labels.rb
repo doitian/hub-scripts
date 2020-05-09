@@ -31,13 +31,7 @@ client.labels(project, preview_header).each do |label|
   if label_to_update && (label_to_update[:color] != label[:color] || label_to_update[:description] != label[:description]) then
     puts "update #{label[:name]}"
     client.update_label(project, label[:name], label_to_update.merge(preview_header))
-  else
-    puts "skip #{label[:name]}"
   end
-  # if !label_to_update
-  #   puts "delete #{label[:name]}"
-  #   client.delete_label!(project, label[:name])
-  # end
 end
 
 labels_to_add.each do |(name, label)|
