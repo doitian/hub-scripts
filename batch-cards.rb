@@ -11,7 +11,7 @@ end
 path = ARGV.first
 
 preview_header = { accept: 'application/vnd.github.inertia-preview+json' }
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 
 File.open(path, 'r') do |fd|
   JSON.parse(fd.read).each_pair do |(col_id, notes)|

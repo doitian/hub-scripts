@@ -17,7 +17,7 @@ end
 
 repo, number = ARGV
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 
 issue = client.issue(repo, number)

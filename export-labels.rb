@@ -16,7 +16,7 @@ out_dir = "out/#{project}"
 FileUtils.mkdir_p(out_dir)
 
 preview_header = { accept: 'application/vnd.github.symmetra-preview+json' }
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 labels = client.labels(project, preview_header).map do |label|
   {

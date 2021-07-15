@@ -1,10 +1,10 @@
 # GitHub Scripts
 
 All the scripts read [Github personal access
-token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line#creating-a-token) from environment variable `GITHUB_ACCESS_TOKEN`. It can be set in `.env` file:
+token](https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line#creating-a-token) from environment variable `GITHUB_TOKEN`. It can be set in `.env` file:
 
 ```
-GITHUB_ACCESS_TOKEN=""
+GITHUB_TOKEN=""
 ```
 
 ## console.rb

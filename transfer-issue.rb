@@ -10,7 +10,7 @@ end
 
 from_repo, to_repo = ARGV
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 
 ARGV[2..-1].each do |from_number|
   issue = client.issue(from_repo, from_number)

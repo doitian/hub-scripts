@@ -15,7 +15,7 @@ column_id, template = ARGV
 
 erb = ERB.new(File.open(template).read)
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 
 column = client.project_column(column_id, preview_header)

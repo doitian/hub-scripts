@@ -19,7 +19,7 @@ FileUtils.mkdir_p(out_dir)
 now = Time.now
 last_time_file = "#{out_dir}/issues.time"
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 if File.exists?(last_time_file) then
   last_time = Time.at(File.read(last_time_file).to_i)

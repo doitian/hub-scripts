@@ -16,7 +16,7 @@ end
 repo, branch, on_off = ARGV
 enforce_admins = on_off == 'on'
 
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 current = client.branch_protection(repo, branch).to_h
 
 options = {

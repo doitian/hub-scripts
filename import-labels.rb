@@ -23,7 +23,7 @@ File.open(path, 'r') do |fd|
 end
 
 preview_header = { accept: 'application/vnd.github.symmetra-preview+json' }
-client = Octokit::Client.new(access_token: ENV['GITHUB_ACCESS_TOKEN'])
+client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
 client.auto_paginate = true
 
 client.labels(project, preview_header).each do |label|
