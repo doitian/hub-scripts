@@ -21,8 +21,8 @@ current = client.branch_protection(repo, branch).to_h
 
 options = {
   enforce_admins: enforce_admins,
-  required_status_checks: current[:required_status_checks].slice(:strict, :contexts),
-  required_pull_request_reviews: current[:required_pull_request_reviews].slice(:dismissal_restrictions, :dismiss_stale_reviews, :require_code_owner_reviews, :required_approving_review_count)
+  required_status_checks: current[:required_status_checks]&.slice(:strict, :contexts),
+  required_pull_request_reviews: current[:required_pull_request_reviews]&.slice(:dismissal_restrictions, :dismiss_stale_reviews, :require_code_owner_reviews, :required_approving_review_count)
 }
 
 if current[:restrictions]
