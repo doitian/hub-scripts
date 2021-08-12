@@ -1,35 +1,70 @@
 #!/usr/bin/env ruby
 
-require_relative 'setup'
+require_relative 'graphql-setup'
 
-if ARGV.size != 3
-  $stderr.puts 'enforce-admins.rb repo branch on|off'
+if ARGV.size == 2
+  repo, pattern = ARGV
+  enforce_admins = nil
+elsif ARGV.size == 3
+  repo, pattern, on_off = ARGV
+  enforce_admins = on_off == 'on'
+else
+  $stderr.puts 'enforce-admins.rb repo pattern [on|off]'
   exit 1
 end
 
-class Hash
-    def slice(*keys)
-      keys.each_with_object(self.class.new) { |k, hash| hash[k] = self[k] if has_key?(k) }
-    end
-end
+repo_owner, repo_name = repo.split('/')
 
-repo, branch, on_off = ARGV
-enforce_admins = on_off == 'on'
-
-client = Octokit::Client.new(access_token: ENV['GITHUB_TOKEN'])
-current = client.branch_protection(repo, branch).to_h
-
-options = {
-  enforce_admins: enforce_admins,
-  required_status_checks: current[:required_status_checks]&.slice(:strict, :contexts),
-  required_pull_request_reviews: current[:required_pull_request_reviews]&.slice(:dismissal_restrictions, :dismiss_stale_reviews, :require_code_owner_reviews, :required_approving_review_count)
-}
-
-if current[:restrictions]
-  options[:restrictions] = {
-    users: current[:restrictions][:users].map {|u| u[:login] },
-    teams: current[:restrictions][:teams].map {|t| t[:slug] }
+BranchProtectionRulesQuery = GitHubGraphQL::Client.parse <<-GRAPHQL
+query($name: String!, $owner: String!) {
+  repository(name: $name, owner: $owner) {
+    branchProtectionRules(first: 100) {
+      nodes {
+        id
+        pattern
+        isAdminEnforced
+      }
+    }
   }
+}
+GRAPHQL
+
+EnforceAdminsMutation = GitHubGraphQL::Client.parse <<-GRAPHQL
+mutation($id: ID!, $enforce: Boolean!) {
+  updateBranchProtectionRule(input: {
+    branchProtectionRuleId: $id,
+    isAdminEnforced: $enforce,
+  }) {
+    branchProtectionRule {
+      id
+      pattern
+      isAdminEnforced
+    }
+  }
+}
+GRAPHQL
+
+rules = GitHubGraphQL::Client.query(
+  BranchProtectionRulesQuery,
+  variables: {
+    name: repo_name,
+    owner: repo_owner
+  }
+).data.repository.branch_protection_rules.nodes
+
+matched_rule = rules.find {|r| r.pattern == pattern}
+if matched_rule.nil?
+  $stderr.puts "Protection pattern not found, available: #{rules.map(&:pattern).join(', ')}"
 end
 
-client.protect_branch(repo, branch, options)
+if !enforce_admins.nil? && enforce_admins != matched_rule.is_admin_enforced
+  matched_rule = GitHubGraphQL::Client.query(
+    EnforceAdminsMutation,
+    variables: {
+      id: matched_rule.id,
+      enforce: enforce_admins
+    }
+  ).data.update_branch_protection_rule.branch_protection_rule
+end
+
+puts matched_rule.to_h
